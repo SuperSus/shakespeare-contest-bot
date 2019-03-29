@@ -3,11 +3,11 @@
 module QuizSolver
   extend ActiveSupport::Concern
 
-  def find_1
+  def find_1(question)
     STORAGES.storage_1[question.gsub(/\W+/, '')]
   end
 
-  def find_2_3_4
+  def find_2_3_4(question)
     answer = question.split("\n").map do |sentence|
       key = sentence.scan(/([\w'%]+)/).flatten
       result = find_absent(key.reject { |word| word == '%WORD%' })
@@ -20,8 +20,8 @@ module QuizSolver
     answer.join(',')
   end
 
-  def find_5
-    key = s.scan(/([\w'%]+)/).flatten
+  def find_5(question)
+    key = question.scan(/([\w'%]+)/).flatten
 
     key.each_index do |i|
       probably_key = key.values_at(0...i, (i + 1)..-1)
