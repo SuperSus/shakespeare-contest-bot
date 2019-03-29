@@ -10,9 +10,9 @@ class QuizController < ApplicationController
   def receive_task
     answer = solver(params[:level], params[:question])
 
-    respond = respond_task(answer, params[:task_id])
+    respond = respond_task(answer, params[:id])
 
-    logger.debug "respond -- #{respond} | -- question #{ params[:question] } - #{params[:level]} | -- answer #{answer} "
+    logger.debug "respond -- #{respond.body} | -- question #{ params[:question] } - #{params[:level]} | -- answer #{answer} "
     # return render head :ok
   end
 
