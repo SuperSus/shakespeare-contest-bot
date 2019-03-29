@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class QuizController < ApplicationController
   def index
-    render html: "#{params.inspect}"
+    render html: params.inspect.to_s
   end
 
   def receive_task
@@ -8,7 +10,7 @@ class QuizController < ApplicationController
 
     respond_task(answer, params[:task_id])
 
-    #return render head :ok
+    # return render head :ok
   end
 
   private
@@ -23,7 +25,7 @@ class QuizController < ApplicationController
   end
 
   def respond_task(answer, task_id)
-    uri = URI("https://shakespeare-contest.rubyroidlabs.com/quiz")
+    uri = URI('https://shakespeare-contest.rubyroidlabs.com/quiz')
 
     parameters = {
       answer: answer,
