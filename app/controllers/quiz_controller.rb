@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class QuizController < ApplicationController
+  include QuizSolver
+
   def index
     render html: params.inspect.to_s
   end
@@ -18,9 +20,11 @@ class QuizController < ApplicationController
   def solver(level, question)
     case level
     when 1
-      $loader.storage_1(question)
-    when 2
-      $loader.find_2e(question)
+      find_1(question)
+    when [2, 3, 4].include?(level)
+      find_2_3_4(question)
+    when 5
+      find_5(question)
     end
   end
 
