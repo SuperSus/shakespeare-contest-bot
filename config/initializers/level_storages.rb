@@ -78,10 +78,10 @@ class LevelStorages
     nil
   end
 
-  # input "aaa bbd" -> output { 'a' => 3, 'b' => 2, ' ' => 1, 'd' => 1 }
+  # input "aaa bbd" -> output { 'a' => 3, ' ' => 1, 'b' => 2, 'd' => 1 }
   def make_frequency_counter(str)
     frequency_counter = {}
-    str = clean(str)
+    str = sort_string(str)
     str.chars.map do |char|
       frequency_counter[char] = (frequency_counter[char] || 0) + 1
     end
