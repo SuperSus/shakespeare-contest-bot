@@ -31,7 +31,9 @@ module QuizSolver
     end
   end
 
-  def find_6; end
+  def find_6_7(question)
+    STORAGES.search_by_tree(question)
+  end
 
   private
 

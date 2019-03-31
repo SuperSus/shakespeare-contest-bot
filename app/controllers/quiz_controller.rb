@@ -10,8 +10,9 @@ class QuizController < ApplicationController
   def receive_task
     answer = solver(params[:level], params[:question])
 
-    respond = respond_task(answer, params[:id])
+    return unless answer   
 
+    respond = respond_task(answer, params[:id]) 
     logger.debug "respond -- #{respond.body} | -- question #{ params[:question] } - #{params[:level]} | -- answer #{answer} "
     # return render head :ok
   end
@@ -19,13 +20,15 @@ class QuizController < ApplicationController
   private
 
   def solver(level, question)
-    case level
-    when 1
+    case 
+    when level == 1
       find_1(question)
     when [2, 3, 4].include?(level)
       find_2_3_4(question)
-    when 5
+    when level == 5 
       find_5(question)
+    when [6, 7].include?(level)
+      find_6_7(question)
     end
   end
 
