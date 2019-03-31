@@ -49,6 +49,8 @@ module QuizSolver
           return missmatch if key.size == i + 1
         end
 
+        return str[i + 1] if key.size == i + 1
+
         next unless !missmatch && str[i] != key[i]
         break if key[i] != str[i + 1]
 
