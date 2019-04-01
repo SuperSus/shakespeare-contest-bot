@@ -196,4 +196,4 @@ class LevelStorages
   end
 end
 
-STORAGES = LevelStorages.new
+STORAGES = QuizData.new
