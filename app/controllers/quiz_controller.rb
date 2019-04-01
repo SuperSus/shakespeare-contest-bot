@@ -4,7 +4,7 @@ class QuizController < ApplicationController
   include QuizSolver
 
   def index 
-    render plain:  JSON.pretty_generate(REQUESTS)
+    render plain: JSON.pretty_generate(REQUESTS)
   end
 
   def receive_task

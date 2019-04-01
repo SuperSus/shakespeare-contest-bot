@@ -4,7 +4,7 @@ module QuizSolver
   extend ActiveSupport::Concern
 
   def find_1(question)
-    STORAGES.storage_1[question.gsub(/\W+/, '')]
+    QUIZ_DATA.storage_1[question.gsub(/\W+/, '')]
   end
 
   def find_2_3_4(question)
@@ -32,18 +32,18 @@ module QuizSolver
   end
 
   def find_6_7(question)
-    STORAGES.search_by_tree(question)
+    QUIZ_DATA.search_by_tree(question)
   end
 
   def find_8(question)
-    STORAGES.search_8(question)
+    QUIZ_DATA.search_8(question)
   end
 
   private
 
   def find_absent(key)
     missmatch = nil
-    STORAGES.storage_2[key.size + 1].each do |str|
+    QUIZ_DATA.storage_2[key.size + 1].each do |str|
       str.each_index do |i|
         if missmatch
           if str[i + 1] != key[i]

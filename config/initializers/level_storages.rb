@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-class LevelStorages
+class QuizData
   FILE_PATH = 'db/shakespeare_data.yml'.freeze
   TREE_DEPTH = 4
 
-  attr_accessor :storage_1, :storage_2, :tree_storage, :storage_8
+  attr_accessor :storage_1, :storage_2
 
   def initialize
     @data = load_data
@@ -13,6 +13,38 @@ class LevelStorages
     @tree_storage = make_tree_storage
     @storage_8 = make_storage_8
   end
+
+  def search_by_tree(str)
+    frequency_counter = make_frequency_counter(str)
+
+    key_path = frequency_counter.first(TREE_DEPTH).flatten
+    key_path << :str_id
+
+    str_ids = @tree_storage.dig(*key_path)
+
+    return if str_ids.nil?
+
+    str = sort_string(str)
+    str_ids.each do |id|
+      return shared_data[id] if sort_string(shared_data[id]) == str
+    end
+    nil
+  end
+
+  def search_8(str)
+    input_str = sort_string(str)
+
+    frequency_c1 = make_frequency_counter(input_str)
+    
+    @storage_8[input_str.length].each do |row|
+      frequency_c2 = make_frequency_counter(row.sorted_str)
+
+      return shared_data[row.str_id] if compare(frequency_c1, frequency_c2) 
+    end
+    nil
+  end
+
+  private 
 
   def make_storage_1
     storage = {}
@@ -39,6 +71,7 @@ class LevelStorages
   def make_tree_storage
     storage = {}
     shared_data.each do |str_id, str|
+      str = sort_string(str)
       frequency_counter = make_frequency_counter(str)
 
       limited_frequency_counter = frequency_counter.first(TREE_DEPTH).to_h
@@ -62,40 +95,9 @@ class LevelStorages
     end
   end
 
-  def search_by_tree(str)
-    frequency_counter = make_frequency_counter(str)
-
-    key_path = frequency_counter.first(TREE_DEPTH).flatten
-    key_path << :str_id
-
-    str_ids = @tree_storage.dig(*key_path)
-
-    return if str_ids.nil?
-
-    str = sort_string(str)
-    str_ids.each do |id|
-      return shared_data[id] if sort_string(shared_data[id]) == str
-    end
-    nil
-  end
-
-  def make_storage_8
-    storage_row = Struct.new(:sorted_str, :str_id)
-    storage = {}
-    shared_data.each do |str_id, str|
-      sorted_str = sort_string(str)
-      length = sorted_str.length
-
-      row = storage_row.new(sorted_str, str_id)
-      storage[length] = (storage[length] || []) << row 
-    end
-    storage
-  end
-
   # input "aaa bbd" -> output { 'a' => 3, ' ' => 1, 'b' => 2, 'd' => 1 }
   def make_frequency_counter(str)
     frequency_counter = {}
-    str = sort_string(str)
     str.chars.each do |char|
       frequency_counter[char] = (frequency_counter[char] || 0) + 1
     end
@@ -115,34 +117,13 @@ class LevelStorages
     storage
   end
 
-  def make_f_c(str)
-    frequency_counter = {}
-    str.chars.each do |char|
-      frequency_counter[char] = (frequency_counter[char] || 0) + 1
-    end
-    frequency_counter
-  end
-
-  def search_8(str)
-    input_str = sort_string(str)
-
-    f_c1 = make_f_c(input_str)
-    
-    @storage_8[input_str.length].each do |row|
-      f_c2 = make_f_c(row.sorted_str)
-
-      return shared_data[row.str_id] if compare(f_c1, f_c2) 
-    end
-    nil
-  end
-
-  def compare(f_c1, f_c2)
+  def compare(frequency_c1, frequency_c2)
     offences = 0
-    f_c1.each do |char, count|
-      if f_c2[char].nil?
+    frequency_c1.each do |char, count|
+      if frequency_c2[char].nil?
         offences += 1
       else
-        diff = f_c2[char] - count
+        diff = frequency_c2[char] - count
 
         return false if diff < -2 || diff > 2
 
@@ -169,31 +150,10 @@ class LevelStorages
     str.scan(/[\w'\s]+/).join
   end
 
-  def find_absent(key)
-    missmatch = nil
-    @storage_2[key.size + 1].each do |str|
-      str.each_index do |i|
-        if missmatch
-          if str[i + 1] != key[i]
-            missmatch = nil
-            break
-          end
-          return missmatch if key.size == i + 1
-        end
-
-        next unless !missmatch && str[i] != key[i]
-        break if key[i] != str[i + 1]
-
-        missmatch = str[i]
-      end
-    end
-    missmatch
-  end
-
   def load_data
     data = YAML.load_file(FILE_PATH)
     data.each { |_name, strings| strings.compact! }
   end
 end
 
-STORAGES = QuizData.new
+QUIZ_DATA = QuizData.new
