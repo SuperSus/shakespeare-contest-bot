@@ -15,6 +15,7 @@ class QuizData
   end
 
   def search_by_tree(str)
+    str = sort_string(str)
     frequency_counter = make_frequency_counter(str)
 
     key_path = frequency_counter.first(TREE_DEPTH).flatten
@@ -156,4 +157,4 @@ class QuizData
   end
 end
 
-QUIZ_DATA = QuizData.new
+QUIZ_DATA= QuizData.new
