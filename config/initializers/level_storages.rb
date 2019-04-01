@@ -131,8 +131,9 @@ class LevelStorages
     @storage_8[input_str.length].each do |row|
       f_c2 = make_f_c(row.sorted_str)
 
-      return row.str_id if compare(f_c1, f_c2) 
+      return shared_data[row.str_id] if compare(f_c1, f_c2) 
     end
+    nil
   end
 
   def compare(f_c1, f_c2)
