@@ -157,4 +157,4 @@ class QuizData
   end
 end
 
-QUIZ_DATA= QuizData.new
+QUIZ_DATA = QuizData.new

@@ -27,6 +27,7 @@ module QuizSolver
       probably_key = key.values_at(0...i, (i + 1)..-1)
       changed_word = key[i]
       res = find_absent(probably_key)
+      
       return [res, changed_word].join(',') if res
     end
   end
@@ -40,34 +41,6 @@ module QuizSolver
   end
 
   private
-
-  # def find_absent(key)
-  #   missmatch = nil
-  #   QUIZ_DATA.storage_2[key.size + 1].each do |str|
-  #     str.each_index do |i|
-  #       if missmatch
-  #         if str[i + 1] != key[i]
-  #           missmatch = nil
-  #           break
-  #         end
-  #         return missmatch if key.size == i + 1
-  #       end
-
-  #       if !missmatch && str[i] != key[i]
-  #         break if key[i] != str[i + 1]
-
-  #         missmatch = str[i]
-
-  #         return missmatch if key.size == i + 1
-  #       end
-
-  #       return str[i + 1] if key.size == i + 1
-        
-  #       next
-  #     end
-  #   end
-  #   missmatch
-  # end
 
   def find_absent(key)
     QUIZ_DATA.storage_2[key.size + 1].each do |str|

@@ -17,8 +17,6 @@ class QuizController < ApplicationController
     respond = respond_task(answer, params[:id]) 
     
     REQUESTS << { respond: respond.body, task_id: params[:id] }
-
-    logger.debug "respond -- #{respond.body} | -- answer #{answer} "
   end
 
   private
