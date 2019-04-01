@@ -25,7 +25,6 @@ class QuizData
 
     return if str_ids.nil?
 
-    str = sort_string(str)
     str_ids.each do |id|
       return shared_data[id] if sort_string(shared_data[id]) == str
     end

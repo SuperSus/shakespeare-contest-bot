@@ -31,7 +31,7 @@ class QuizController < ApplicationController
       find_5(question)
     when [6, 7].include?(level)
       find_6_7(question)
-    when 8
+    when level == 8
       find_8(question)
     end
   end
