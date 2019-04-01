@@ -103,15 +103,19 @@ class LevelStorages
   end
 
   def make_storage_8
+    storage_row = Struct.new(:sorted_str, :str_id)
     storage = {}
     shared_data.each do |str_id, str|
-      length = clean(str).length
-      storage[length] = (storage[length] || []) << str_id 
+      sorted_str = sort_string(str)
+      length = sorted_str.length
+
+      row = storage_row.new(sorted_str, str_id)
+      storage[length] = (storage[length] || []) << row 
     end
     storage
   end
 
-   def make_f_c(str)
+  def make_f_c(str)
     frequency_counter = {}
     str.chars.each do |char|
       frequency_counter[char] = (frequency_counter[char] || 0) + 1
