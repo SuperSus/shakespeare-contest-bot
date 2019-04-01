@@ -77,8 +77,6 @@ module QuizSolver
     nil 
   end
 
-  end
-
   def check(key, str)
     missmatch = nil
     str.each_index do |i|
