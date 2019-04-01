@@ -14,7 +14,6 @@ class QuizController < ApplicationController
 
     respond = respond_task(answer, params[:id]) 
     logger.debug "respond -- #{respond.body} | -- question #{ params[:question] } - #{params[:level]} | -- answer #{answer} "
-    # return render head :ok
   end
 
   private
@@ -29,6 +28,8 @@ class QuizController < ApplicationController
       find_5(question)
     when [6, 7].include?(level)
       find_6_7(question)
+    when 8
+      find_8(question)
     end
   end
 

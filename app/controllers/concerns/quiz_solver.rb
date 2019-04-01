@@ -35,6 +35,10 @@ module QuizSolver
     STORAGES.search_by_tree(question)
   end
 
+  def find_8(question)
+    STORAGES.search_8(question)
+  end
+
   private
 
   def find_absent(key)

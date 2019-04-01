@@ -11,6 +11,7 @@ class LevelStorages
     @storage_1 = make_storage_1
     @storage_2 = make_storage_2
     @tree_storage = make_tree_storage
+    @storage_8 = make_storage_8
   end
 
   def make_storage_1
@@ -78,11 +79,24 @@ class LevelStorages
     nil
   end
 
+  def make_storage_8
+    storage_row = Struct.new(:sorted_str, :str_id)
+    storage = {}
+    shared_data.each do |str_id, str|
+      sorted_str = sort_string(str)
+      length = sorted_str.length
+
+      row = storage_row.new(sorted_str, str_id)
+      storage[length] = (storage[length] || []) << row 
+    end
+    storage
+  end
+
   # input "aaa bbd" -> output { 'a' => 3, ' ' => 1, 'b' => 2, 'd' => 1 }
   def make_frequency_counter(str)
     frequency_counter = {}
     str = sort_string(str)
-    str.chars.map do |char|
+    str.chars.each do |char|
       frequency_counter[char] = (frequency_counter[char] || 0) + 1
     end
     frequency_counter
@@ -97,32 +111,40 @@ class LevelStorages
     storage
   end
 
-  def search_8(str)
-    key = clean(str).length
-    str = clean(str)
-    frequency_c1 = make_frequency_counter(str)
-
-    finded = storage_8[key].select do |str_id|
-      frequency_c2 = make_frequency_counter(shared_data[str_id])
-
-      (-2..2).include?(frequency_c1.size - frequency_c2.size) &&
-      compare(frequency_c1, frequency_c2)
+   def make_f_c(str)
+    frequency_counter = {}
+    str.chars.each do |char|
+      frequency_counter[char] = (frequency_counter[char] || 0) + 1
     end
-
-    finded
+    frequency_counter
   end
 
-  def compare(frequency_c1, frequency_c2)
-    offense_count = 0
-    frequency_c1.each do |char, count|
-      if frequency_c2[char].nil?
-        offense_count +=1
-        next
-      end
-      
-      offense_count +=1 unless (-2..2).include? (frequency_c2[char] - count)
+  def search_8(str)
+    input_str = sort_string(str)
 
-      return false if offense_count > 1
+    f_c1 = make_f_c(input_str)
+    
+    @storage_8[input_str.length].each do |row|
+      f_c2 = make_f_c(row.sorted_str)
+
+      return row.str_id if compare(f_c1, f_c2) 
+    end
+  end
+
+  def compare(f_c1, f_c2)
+    offences = 0
+    f_c1.each do |char, count|
+      if f_c2[char].nil?
+        offences += 1
+      else
+        diff = f_c2[char] - count
+
+        return false if diff < -2 || diff > 2
+
+        offences +=1 if diff == -1 || diff == 1
+      end
+
+      return false if offences > 2
     end
     true
   end
