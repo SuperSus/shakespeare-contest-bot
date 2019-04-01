@@ -41,32 +41,54 @@ module QuizSolver
 
   private
 
-  def find_absent(key)
-    missmatch = nil
-    QUIZ_DATA.storage_2[key.size + 1].each do |str|
-      str.each_index do |i|
-        if missmatch
-          if str[i + 1] != key[i]
-            missmatch = nil
-            break
-          end
-          return missmatch if key.size == i + 1
-        end
+  # def find_absent(key)
+  #   missmatch = nil
+  #   QUIZ_DATA.storage_2[key.size + 1].each do |str|
+  #     str.each_index do |i|
+  #       if missmatch
+  #         if str[i + 1] != key[i]
+  #           missmatch = nil
+  #           break
+  #         end
+  #         return missmatch if key.size == i + 1
+  #       end
 
+  #       if !missmatch && str[i] != key[i]
+  #         break if key[i] != str[i + 1]
 
-        if !missmatch && str[i] != key[i]
-          break if key[i] != str[i + 1]
+  #         missmatch = str[i]
 
-          missmatch = str[i]
+  #         return missmatch if key.size == i + 1
+  #       end
 
-          return missmatch if key.size == i + 1
-        end
-
-        return str[i + 1] if key.size == i + 1
+  #       return str[i + 1] if key.size == i + 1
         
-        next
+  #       next
+  #     end
+  #   end
+  #   missmatch
+  # end
+
+  def find_absent(key)
+    QUIZ_DATA.storage_2[key.size + 1].each do |str|
+      absent_word = check(key, str)
+      return absent_word if absent_word 
+    end
+    nil 
+  end
+
+  end
+
+  def check(key, str)
+    missmatch = nil
+    str.each_index do |i|
+      return if missmatch && str[i + 1] != key[i]
+
+      if !missmatch && str[i] != key[i]
+        return if key[i] != str[i + 1]
+        missmatch = str[i]
       end
     end
-    missmatch
-  end
+    missmatch || str[-1] 
+  end 
 end
