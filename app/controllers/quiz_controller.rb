@@ -3,17 +3,23 @@
 class QuizController < ApplicationController
   include QuizSolver
 
-  def index
-    render html: params.inspect.to_s
+  def index 
+    render json: REQUESTS
+    #render inline: "<% products.each do |p| %><p><%= p.name %></p><% end %>"
   end
 
   def receive_task
     answer = solver(params[:level], params[:question])
 
+    REQUESTS << params
+
     return unless answer   
 
     respond = respond_task(answer, params[:id]) 
-    logger.debug "respond -- #{respond.body} | -- question #{ params[:question] } - #{params[:level]} | -- answer #{answer} "
+    
+    REQUESTS << { respond: respond }
+
+    logger.debug "respond -- #{respond.body} | -- answer #{answer} "
   end
 
   private
